@@ -1,0 +1,584 @@
+{
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": "-- Grafana --",
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "type": "dashboard"
+      }
+    ]
+  },
+  "editable": true,
+  "gnetId": null,
+  "graphTooltip": 0,
+  "id": 6,
+  "links": [],
+  "panels": [
+    {
+      "columns": [],
+      "datasource": "IRIS",
+      "fontSize": "80%",
+      "gridPos": {
+        "h": 5,
+        "w": 24,
+        "x": 0,
+        "y": 0
+      },
+      "id": 15,
+      "links": [],
+      "pageSize": 25,
+      "scroll": true,
+      "showHeader": true,
+      "sort": {
+        "col": 3,
+        "desc": true
+      },
+      "styles": [
+        {
+          "alias": "Time",
+          "dateFormat": "YYYY-MM-DD HH:mm:ss",
+          "pattern": "Time",
+          "type": "date"
+        },
+        {
+          "alias": "",
+          "colorMode": "row",
+          "colors": [
+            "rgba(50, 172, 45, 0.97)",
+            "rgba(237, 129, 40, 0.89)",
+            "rgba(245, 54, 54, 0.9)"
+          ],
+          "dateFormat": "YYYY-MM-DD HH:mm:ss",
+          "decimals": 0,
+          "mappingType": 1,
+          "pattern": "codice",
+          "thresholds": [
+            "1.5",
+            "2.5"
+          ],
+          "type": "number",
+          "unit": "short"
+        },
+        {
+          "alias": "Ora rilevazione UTC",
+          "colorMode": null,
+          "colors": [
+            "rgba(245, 54, 54, 0.9)",
+            "rgba(237, 129, 40, 0.89)",
+            "rgba(50, 172, 45, 0.97)"
+          ],
+          "dateFormat": "YYYY-MM-DD HH:mm:ss",
+          "decimals": 2,
+          "mappingType": 1,
+          "pattern": "data_e_ora",
+          "thresholds": [],
+          "type": "date",
+          "unit": "short"
+        },
+        {
+          "alias": "",
+          "colorMode": null,
+          "colors": [
+            "rgba(245, 54, 54, 0.9)",
+            "rgba(237, 129, 40, 0.89)",
+            "rgba(50, 172, 45, 0.97)"
+          ],
+          "decimals": 2,
+          "pattern": "/.*/",
+          "thresholds": [],
+          "type": "number",
+          "unit": "short"
+        }
+      ],
+      "targets": [
+        {
+          "alias": "",
+          "format": "table",
+          "hide": false,
+          "rawSql": "SELECT comune,attributo,count(a.nometipologia),codice,descrizione,max(e.data_e_ora) as rilevato,max(idrete) as idrete, max(rt.data_e_ora) as lastdata\r\nfrom realtime.errori_sensori as e \r\n\r\njoin dati_di_base.anagraficasensori as a on e.idsensore=a.idsensore \r\njoin realtime.m_osservazioni_tr as rt on rt.idsensore=e.idsensore \r\n\r\nwhere rt.data_e_ora > now()-interval '1 day' \r\ngroup by comune, attributo, codice, descrizione",
+          "refId": "A"
+        }
+      ],
+      "title": "Stato Sensori",
+      "transform": "table",
+      "type": "table"
+    },
+    {
+      "cards": {
+        "cardPadding": -0.5,
+        "cardRound": null
+      },
+      "color": {
+        "cardColor": "#b4ff00",
+        "colorScale": "sqrt",
+        "colorScheme": "interpolateReds",
+        "exponent": 0.5,
+        "mode": "spectrum"
+      },
+      "dataFormat": "timeseries",
+      "datasource": "IRIS",
+      "description": "deve esserci una riga continua bianca alla base",
+      "gridPos": {
+        "h": 4,
+        "w": 12,
+        "x": 0,
+        "y": 5
+      },
+      "heatmap": {},
+      "highlightCards": true,
+      "id": 4,
+      "legend": {
+        "show": true
+      },
+      "links": [],
+      "targets": [
+        {
+          "alias": "",
+          "format": "time_series",
+          "hide": false,
+          "rawSql": "select  $__time(data_e_ora),\nEXTRACT( epoch from (data+interval '1 hour' -data_e_ora)) as value,  \nan.comune as metric\n\nfrom realtime.m_osservazioni_tr as rt right outer join dati_di_base.anagraficasensori as an on rt.idsensore=an.idsensore \nwhere an.nometipologia='I' and data_e_ora > now()-interval '1 day' and idrete=4\n",
+          "refId": "A"
+        }
+      ],
+      "title": "Ritardo idrometri",
+      "tooltip": {
+        "show": true,
+        "showHistogram": true
+      },
+      "type": "heatmap",
+      "xAxis": {
+        "show": true
+      },
+      "xBucketNumber": null,
+      "xBucketSize": "10m",
+      "yAxis": {
+        "decimals": null,
+        "format": "s",
+        "logBase": 2,
+        "max": "21200",
+        "min": "120",
+        "show": true,
+        "splitFactor": null
+      },
+      "yBucketBound": "auto",
+      "yBucketNumber": null,
+      "yBucketSize": null
+    },
+    {
+      "cards": {
+        "cardPadding": 0,
+        "cardRound": null
+      },
+      "color": {
+        "cardColor": "#b4ff00",
+        "colorScale": "sqrt",
+        "colorScheme": "interpolateYlOrRd",
+        "exponent": 0.5,
+        "mode": "spectrum"
+      },
+      "dataFormat": "timeseries",
+      "datasource": "IRIS",
+      "description": "deve esserci una riga continua bianca alla base",
+      "gridPos": {
+        "h": 4,
+        "w": 12,
+        "x": 12,
+        "y": 5
+      },
+      "heatmap": {},
+      "highlightCards": true,
+      "id": 5,
+      "legend": {
+        "show": true
+      },
+      "links": [],
+      "targets": [
+        {
+          "alias": "",
+          "format": "time_series",
+          "hide": false,
+          "rawSql": "select  $__time(data_e_ora),\nEXTRACT( epoch from (data+interval '1 hour' -data_e_ora)) as value,  \nautore as metric\n\nfrom realtime.m_osservazioni_tr as rt right outer join dati_di_base.anagraficasensori as an on rt.idsensore=an.idsensore \nwhere data_e_ora > now()-interval '2 day' and idrete=4\norder by data_e_ora\n",
+          "refId": "A"
+        }
+      ],
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "Ritardo tutti i sensori",
+      "tooltip": {
+        "show": true,
+        "showHistogram": true
+      },
+      "type": "heatmap",
+      "xAxis": {
+        "show": true
+      },
+      "xBucketNumber": null,
+      "xBucketSize": "10m",
+      "yAxis": {
+        "decimals": null,
+        "format": "s",
+        "logBase": 2,
+        "max": null,
+        "min": "240",
+        "show": true,
+        "splitFactor": null
+      },
+      "yBucketBound": "auto",
+      "yBucketNumber": null,
+      "yBucketSize": 50
+    },
+    {
+      "cards": {
+        "cardPadding": 0,
+        "cardRound": null
+      },
+      "color": {
+        "cardColor": "#b4ff00",
+        "colorScale": "sqrt",
+        "colorScheme": "interpolatePuBuGn",
+        "exponent": 0.5,
+        "mode": "spectrum"
+      },
+      "dataFormat": "timeseries",
+      "datasource": "IRIS",
+      "description": "deve esserci una riga continua bianca alla base",
+      "gridPos": {
+        "h": 4,
+        "w": 12,
+        "x": 0,
+        "y": 9
+      },
+      "heatmap": {},
+      "highlightCards": true,
+      "id": 6,
+      "legend": {
+        "show": true
+      },
+      "links": [],
+      "targets": [
+        {
+          "alias": "",
+          "format": "time_series",
+          "hide": false,
+          "rawSql": "select  $__time(data_e_ora),\nEXTRACT( epoch from (data+interval '1 hour' -data_e_ora)) as value,  \nan.comune as metric\n\nfrom realtime.m_osservazioni_tr as rt right outer join dati_di_base.anagraficasensori as an on rt.idsensore=an.idsensore \nwhere data_e_ora > now()-interval '2 day' and idrete=1\n",
+          "refId": "A"
+        }
+      ],
+      "title": "Ritardo sensori RRQA",
+      "tooltip": {
+        "show": true,
+        "showHistogram": false
+      },
+      "type": "heatmap",
+      "xAxis": {
+        "show": true
+      },
+      "xBucketNumber": null,
+      "xBucketSize": "10m",
+      "yAxis": {
+        "decimals": null,
+        "format": "s",
+        "logBase": 2,
+        "max": null,
+        "min": "240",
+        "show": true,
+        "splitFactor": null
+      },
+      "yBucketBound": "auto",
+      "yBucketNumber": null,
+      "yBucketSize": 50
+    },
+    {
+      "cards": {
+        "cardPadding": 0,
+        "cardRound": null
+      },
+      "color": {
+        "cardColor": "#b4ff00",
+        "colorScale": "sqrt",
+        "colorScheme": "interpolateYlOrBr",
+        "exponent": 0.5,
+        "mode": "spectrum"
+      },
+      "dataFormat": "timeseries",
+      "datasource": "IRIS",
+      "description": "deve esserci una riga continua bianca alla base",
+      "gridPos": {
+        "h": 4,
+        "w": 12,
+        "x": 12,
+        "y": 9
+      },
+      "heatmap": {},
+      "highlightCards": true,
+      "id": 12,
+      "legend": {
+        "show": true
+      },
+      "links": [],
+      "targets": [
+        {
+          "alias": "",
+          "format": "time_series",
+          "hide": false,
+          "rawSql": "select  $__time(data_e_ora),\nEXTRACT( epoch from (data+interval '1 hour' -data_e_ora)) as value,  \nan.comune as metric\n\nfrom realtime.m_osservazioni_tr as rt right outer join dati_di_base.anagraficasensori as an on rt.idsensore=an.idsensore \nwhere data_e_ora > now()-interval '2 day' and idrete in (2,3,5,6,7,8)\n",
+          "refId": "A"
+        }
+      ],
+      "title": "Ritardo sensori non UO",
+      "tooltip": {
+        "show": true,
+        "showHistogram": false
+      },
+      "type": "heatmap",
+      "xAxis": {
+        "show": true
+      },
+      "xBucketNumber": null,
+      "xBucketSize": "30m",
+      "yAxis": {
+        "decimals": null,
+        "format": "s",
+        "logBase": 2,
+        "max": null,
+        "min": "240",
+        "show": true,
+        "splitFactor": null
+      },
+      "yBucketBound": "auto",
+      "yBucketNumber": null,
+      "yBucketSize": 50
+    },
+    {
+      "cards": {
+        "cardPadding": 0,
+        "cardRound": null
+      },
+      "color": {
+        "cardColor": "#b4ff00",
+        "colorScale": "sqrt",
+        "colorScheme": "interpolatePuRd",
+        "exponent": 0.5,
+        "mode": "spectrum"
+      },
+      "dataFormat": "timeseries",
+      "datasource": "IRIS",
+      "description": "deve esserci una riga continua bianca alla base",
+      "gridPos": {
+        "h": 4,
+        "w": 12,
+        "x": 0,
+        "y": 13
+      },
+      "heatmap": {},
+      "highlightCards": true,
+      "id": 13,
+      "legend": {
+        "show": true
+      },
+      "links": [],
+      "targets": [
+        {
+          "alias": "",
+          "format": "time_series",
+          "hide": false,
+          "rawSql": "select  $__time(data_e_ora),\nEXTRACT( epoch from (data+interval '1 hour' -data_e_ora)) as value,  \nan.comune as metric\n\nfrom realtime.m_osservazioni_tr as rt right outer join dati_di_base.anagraficasensori as an on rt.idsensore=an.idsensore \nwhere data_e_ora > now()-interval '2 day' and idrete in (1,4) and autore like 'recupero%'\n",
+          "refId": "A"
+        }
+      ],
+      "title": "Ritardo sensori in recupero",
+      "tooltip": {
+        "show": true,
+        "showHistogram": false
+      },
+      "type": "heatmap",
+      "xAxis": {
+        "show": true
+      },
+      "xBucketNumber": null,
+      "xBucketSize": "30m",
+      "yAxis": {
+        "decimals": null,
+        "format": "s",
+        "logBase": 2,
+        "max": null,
+        "min": "240",
+        "show": true,
+        "splitFactor": null
+      },
+      "yBucketBound": "auto",
+      "yBucketNumber": null,
+      "yBucketSize": 50
+    },
+    {
+      "aliasColors": {},
+      "breakPoint": "50%",
+      "cacheTimeout": null,
+      "combine": {
+        "label": "Others",
+        "threshold": 0
+      },
+      "datasource": "IRIS",
+      "description": "75b alimentazione diretta\naba alimentazione 5 minuti\n99b recupero",
+      "fontSize": "80%",
+      "format": "short",
+      "gridPos": {
+        "h": 7,
+        "w": 6,
+        "x": 12,
+        "y": 13
+      },
+      "id": 8,
+      "interval": null,
+      "legend": {
+        "show": true,
+        "values": true
+      },
+      "legendType": "On graph",
+      "links": [],
+      "maxDataPoints": 3,
+      "nullPointMode": "connected",
+      "pieType": "donut",
+      "strokeWidth": 1,
+      "targets": [
+        {
+          "alias": "",
+          "format": "time_series",
+          "hide": false,
+          "rawSql": "select  $__time(data_e_ora),\nEXTRACT( epoch from (data+interval '1 hour' -data_e_ora)) as value,  \nautore as metric from realtime.m_osservazioni_tr\nwhere nometipologia='I' and data_e_ora > now()-interval '1 day' \n",
+          "refId": "A"
+        }
+      ],
+      "timeFrom": "24h",
+      "timeShift": null,
+      "title": "Alimentazione idrometri",
+      "type": "grafana-piechart-panel",
+      "valueName": "current"
+    },
+    {
+      "aliasColors": {},
+      "breakPoint": "50%",
+      "cacheTimeout": null,
+      "combine": {
+        "label": "Others",
+        "threshold": 0
+      },
+      "datasource": "IRIS",
+      "description": "75b alimentazione diretta\naba alimentazione 5 minuti\n99b recupero",
+      "fontSize": "80%",
+      "format": "short",
+      "gridPos": {
+        "h": 7,
+        "w": 6,
+        "x": 18,
+        "y": 13
+      },
+      "id": 9,
+      "interval": null,
+      "legend": {
+        "show": true,
+        "values": true
+      },
+      "legendType": "On graph",
+      "links": [],
+      "maxDataPoints": 3,
+      "nullPointMode": "connected",
+      "pieType": "donut",
+      "strokeWidth": 1,
+      "targets": [
+        {
+          "alias": "",
+          "format": "time_series",
+          "hide": false,
+          "rawSql": "select  $__time(data_e_ora- interval '2 hours'),\nEXTRACT( epoch from (data+interval '1 hour' -data_e_ora)) as value,  \nautore as metric\n\nfrom realtime.m_osservazioni_tr as rt right outer join dati_di_base.anagraficasensori as an on rt.idsensore=an.idsensore \nwhere data_e_ora > now()-interval '1 day' and idrete=4\n",
+          "refId": "A"
+        }
+      ],
+      "timeFrom": "24h",
+      "title": "Alimentazione complessiva",
+      "type": "grafana-piechart-panel",
+      "valueName": "current"
+    },
+    {
+      "bgColor": null,
+      "datasource": "IRIS",
+      "gridPos": {
+        "h": 4,
+        "w": 12,
+        "x": 0,
+        "y": 17
+      },
+      "id": 11,
+      "links": [],
+      "targets": [
+        {
+          "alias": "",
+          "format": "time_series",
+          "hide": false,
+          "rawSql": "select  $__time(data_e_ora- interval '2 hours'),\nEXTRACT( epoch from (data+interval '1 hour' -data_e_ora)) as value,  \nautore as metric\n\nfrom realtime.m_osservazioni_tr as rt right outer join dati_di_base.anagraficasensori as an on rt.idsensore=an.idsensore \nwhere data_e_ora > now()-interval '12 hour' and idrete=4\n",
+          "refId": "A"
+        }
+      ],
+      "title": "Distribuzione recuperi (last 12h)",
+      "trafficLightSettings": {
+        "digits": 1,
+        "fontSize": "12px",
+        "greenThreshold": 540,
+        "invertScale": false,
+        "lightsPerLine": 5,
+        "max": 10000,
+        "redThreshold": 200,
+        "showTrend": true,
+        "showValue": true,
+        "spreadControls": true,
+        "units": "",
+        "width": 20
+      },
+      "type": "snuids-trafficlights-panel"
+    }
+  ],
+  "refresh": false,
+  "schemaVersion": 16,
+  "style": "dark",
+  "tags": [],
+  "templating": {
+    "list": []
+  },
+  "time": {
+    "from": "now/d",
+    "to": "now/d"
+  },
+  "timepicker": {
+    "refresh_intervals": [
+      "5s",
+      "10s",
+      "30s",
+      "1m",
+      "5m",
+      "15m",
+      "30m",
+      "1h",
+      "2h",
+      "1d"
+    ],
+    "time_options": [
+      "5m",
+      "15m",
+      "1h",
+      "6h",
+      "12h",
+      "24h",
+      "2d",
+      "7d",
+      "30d"
+    ]
+  },
+  "timezone": "utc",
+  "title": "Ritardi",
+  "uid": "z1tNk4biz",
+  "version": 51
+}
