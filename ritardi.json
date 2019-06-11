@@ -15,7 +15,6 @@
   "editable": true,
   "gnetId": null,
   "graphTooltip": 0,
-  "id": 6,
   "links": [],
   "panels": [
     {
@@ -449,11 +448,11 @@
           "alias": "",
           "format": "time_series",
           "hide": false,
-          "rawSql": "select  $__time(data_e_ora),\nEXTRACT( epoch from (data+interval '1 hour' -data_e_ora)) as value,  \nautore as metric from realtime.m_osservazioni_tr\nwhere nometipologia='I' and data_e_ora > now()-interval '1 day' \n",
+          "rawSql": "select  $__time(data_e_ora),\nEXTRACT( epoch from (data+interval '1 hour' -data_e_ora)) as value,  \nautore as metric from realtime.m_osservazioni_tr\nwhere nometipologia='I' and $__timeFilter(data_e_ora)\n",
           "refId": "A"
         }
       ],
-      "timeFrom": "24h",
+      "timeFrom": "6h",
       "timeShift": null,
       "title": "Alimentazione idrometri",
       "type": "grafana-piechart-panel",
@@ -494,11 +493,12 @@
           "alias": "",
           "format": "time_series",
           "hide": false,
-          "rawSql": "select  $__time(data_e_ora- interval '2 hours'),\nEXTRACT( epoch from (data+interval '1 hour' -data_e_ora)) as value,  \nautore as metric\n\nfrom realtime.m_osservazioni_tr as rt right outer join dati_di_base.anagraficasensori as an on rt.idsensore=an.idsensore \nwhere data_e_ora > now()-interval '1 day' and idrete=4\n",
+          "rawSql": "select  $__time(data_e_ora- interval '2 hours'),\nEXTRACT( epoch from (data+interval '1 hour' -data_e_ora)) as value,  \nautore as metric\n\nfrom realtime.m_osservazioni_tr as rt right outer join dati_di_base.anagraficasensori as an on rt.idsensore=an.idsensore \nwhere $__timeFilter(data_e_ora) and idrete=4\n",
           "refId": "A"
         }
       ],
-      "timeFrom": "24h",
+      "timeFrom": "6h",
+      "timeShift": null,
       "title": "Alimentazione complessiva",
       "type": "grafana-piechart-panel",
       "valueName": "current"
@@ -579,6 +579,5 @@
   },
   "timezone": "utc",
   "title": "Ritardi",
-  "uid": "z1tNk4biz",
-  "version": 51
+  "uid": "z1tNk4biz"
 }

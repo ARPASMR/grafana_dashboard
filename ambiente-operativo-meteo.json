@@ -1,0 +1,628 @@
+{
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": "-- Grafana --",
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "type": "dashboard"
+      }
+    ]
+  },
+  "editable": true,
+  "gnetId": null,
+  "graphTooltip": 0,
+  "iteration": 1537531847723,
+  "links": [],
+  "panels": [
+    {
+      "colorMode": "Panel",
+      "colors": {
+        "crit": "rgba(245, 54, 54, 0.9)",
+        "disable": "rgba(128, 128, 128, 0.9)",
+        "ok": "rgba(50, 128, 45, 0.9)",
+        "warn": "rgba(237, 129, 40, 0.9)"
+      },
+      "cornerRadius": 0,
+      "datasource": "syslog",
+      "displayName": "",
+      "flipCard": false,
+      "flipTime": 5,
+      "fontFormat": "Regular",
+      "gridPos": {
+        "h": 9,
+        "w": 12,
+        "x": 0,
+        "y": 0
+      },
+      "id": 14,
+      "isAutoScrollOnOverflow": false,
+      "isGrayOnNoData": false,
+      "isHideAlertsOnDisable": false,
+      "isIgnoreOKColors": false,
+      "links": [],
+      "minSpan": 3,
+      "repeat": "HostName",
+      "repeatDirection": "h",
+      "targets": [
+        {
+          "alias": "",
+          "displayType": "Regular",
+          "format": "time_series",
+          "hide": false,
+          "rawSql": "SELECT\n  UNIX_TIMESTAMP(ReceivedAt) as time_sec,\n  COUNT(FromHost) as value,\n  CAST(Priority as CHAR(1)) as metric\nFROM SystemEvents\nWHERE $__timeFilter(ReceivedAt) \nGROUP BY FromHost\nORDER BY ReceivedAt ASC\n\n\n",
+          "refId": "A",
+          "valueHandler": "Number Threshold"
+        }
+      ],
+      "title": "Panel Title",
+      "type": "vonage-status-panel"
+    },
+    {
+      "backgroundColor": "rgba(128,128,128,0.1)",
+      "colorMaps": [
+        {
+          "color": "#CCC",
+          "text": "N/A"
+        }
+      ],
+      "crosshairColor": "#8F070C",
+      "datasource": "syslog",
+      "description": "1=CRIT",
+      "display": "timeline",
+      "expandFromQueryS": 0,
+      "extendLastValue": true,
+      "gridPos": {
+        "h": 5,
+        "w": 24,
+        "x": 0,
+        "y": 9
+      },
+      "highlightOnMouseover": true,
+      "id": 12,
+      "legendSortBy": "-count",
+      "lineColor": "rgba(0,0,0,0.1)",
+      "links": [],
+      "metricNameColor": "#000000",
+      "rangeMaps": [
+        {
+          "from": "null",
+          "text": "N/A",
+          "to": "null"
+        }
+      ],
+      "rowHeight": 25,
+      "showDistinctCount": false,
+      "showLegend": true,
+      "showLegendCounts": false,
+      "showLegendNames": false,
+      "showLegendPercent": true,
+      "showLegendValues": true,
+      "showTimeAxis": true,
+      "targets": [
+        {
+          "alias": "",
+          "format": "time_series",
+          "rawSql": "SELECT\n  UNIX_TIMESTAMP(ReceivedAt) as time_sec,\n  Count(ReceivedAt) as value,\n  CAST(Priority as CHAR(1)) as metric,\n  FROM SystemEvents\nWHERE $__timeFilter(ReceivedAt) \ngroup by time_sec,metric\nORDER BY ReceivedAt ASC",
+          "refId": "A"
+        }
+      ],
+      "textSize": 12,
+      "textSizeTime": 9,
+      "timeTextColor": "#d8d9da",
+      "title": "ERRORI",
+      "type": "natel-discrete-panel",
+      "units": "short",
+      "valueMaps": [
+        {
+          "op": "=",
+          "text": "N/A",
+          "value": "null"
+        }
+      ],
+      "valueTextColor": "#000000",
+      "writeAllValues": false,
+      "writeLastValue": true,
+      "writeMetricNames": true
+    },
+    {
+      "columns": [],
+      "datasource": "syslog",
+      "fontSize": "100%",
+      "gridPos": {
+        "h": 7,
+        "w": 24,
+        "x": 0,
+        "y": 14
+      },
+      "id": 9,
+      "links": [],
+      "pageSize": null,
+      "scroll": true,
+      "showHeader": true,
+      "sort": {
+        "col": 0,
+        "desc": true
+      },
+      "styles": [
+        {
+          "alias": "Time",
+          "dateFormat": "YYYY-MM-DD HH:mm:ss",
+          "pattern": "ReceivedAt",
+          "type": "date"
+        },
+        {
+          "alias": "",
+          "colorMode": null,
+          "colors": [
+            "rgba(245, 54, 54, 0.9)",
+            "rgba(237, 129, 40, 0.89)",
+            "rgba(50, 172, 45, 0.97)"
+          ],
+          "decimals": 2,
+          "pattern": "/.*/",
+          "thresholds": [],
+          "type": "number",
+          "unit": "short"
+        }
+      ],
+      "targets": [
+        {
+          "alias": "",
+          "format": "table",
+          "hide": false,
+          "rawSql": "SELECT ReceivedAt, FromHost, Message from SystemEvents where Message like '%STATOSENSORI%' and Message like \"%disponibili su FTP%\" ",
+          "refId": "A"
+        },
+        {
+          "alias": "",
+          "format": "table",
+          "hide": true,
+          "rawSql": "SELECT ReceivedAt, FromHost, Message from SystemEvents where Message like '%STATOSENSORI%' and Message like \"%IRIS%\" ",
+          "refId": "B"
+        }
+      ],
+      "title": "Stato Sensori",
+      "transform": "table",
+      "transparent": false,
+      "type": "table"
+    },
+    {
+      "aliasColors": {},
+      "bars": false,
+      "dashLength": 10,
+      "dashes": false,
+      "datasource": "syslog",
+      "decimals": 0,
+      "description": "1=CRIT; 2=ALARM; 3=ERR;4=WARN",
+      "fill": 3,
+      "gridPos": {
+        "h": 6,
+        "w": 24,
+        "x": 0,
+        "y": 21
+      },
+      "id": 6,
+      "legend": {
+        "alignAsTable": true,
+        "avg": false,
+        "current": true,
+        "max": false,
+        "min": false,
+        "rightSide": true,
+        "show": true,
+        "total": false,
+        "values": true
+      },
+      "lines": true,
+      "linewidth": 1,
+      "links": [],
+      "nullPointMode": "null",
+      "percentage": false,
+      "pointradius": 5,
+      "points": false,
+      "renderer": "flot",
+      "seriesOverrides": [
+        {
+          "alias": "1",
+          "bars": true
+        }
+      ],
+      "spaceLength": 10,
+      "stack": true,
+      "steppedLine": false,
+      "targets": [
+        {
+          "alias": "",
+          "format": "time_series",
+          "hide": false,
+          "rawSql": "SELECT\n  UNIX_TIMESTAMP(ReceivedAt) as time_sec,\n  Count(ReceivedAt) as value,\n  CAST(Priority as CHAR(1)) as metric\nFROM SystemEvents\nWHERE $__timeFilter(ReceivedAt) and\nSyslogTag like \"%PREVISORE%\"\nand Priority in ('1','2','3')\ngroup by time_sec,metric\nORDER BY ReceivedAt ASC\n\n",
+          "refId": "A"
+        },
+        {
+          "alias": "",
+          "format": "time_series",
+          "rawSql": "SELECT\n  UNIX_TIMESTAMP(ReceivedAt) as time_sec,\n  Count(ReceivedAt) as value,\n  CAST(Priority as CHAR(1)) as metric\nFROM SystemEvents\nWHERE $__timeFilter(ReceivedAt) and\nSyslogTag like \"%PREVISORE%\"\nand Priority in ('4','5','6')\ngroup by time_sec,metric\nORDER BY ReceivedAt ASC",
+          "refId": "B"
+        }
+      ],
+      "thresholds": [
+        {
+          "colorMode": "critical",
+          "fill": true,
+          "line": true,
+          "op": "gt",
+          "value": 5,
+          "yaxis": "left"
+        }
+      ],
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "Errori PREVISORE",
+      "tooltip": {
+        "shared": true,
+        "sort": 0,
+        "value_type": "individual"
+      },
+      "transparent": false,
+      "type": "graph",
+      "xaxis": {
+        "buckets": null,
+        "mode": "time",
+        "name": null,
+        "show": true,
+        "values": []
+      },
+      "yaxes": [
+        {
+          "format": "short",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        },
+        {
+          "format": "short",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        }
+      ],
+      "yaxis": {
+        "align": false,
+        "alignLevel": null
+      }
+    },
+    {
+      "aliasColors": {},
+      "bars": false,
+      "dashLength": 10,
+      "dashes": false,
+      "datasource": "syslog",
+      "decimals": 0,
+      "description": "1=CRIT; 2=ALARM; 3=ERR;4=WARN",
+      "fill": 3,
+      "gridPos": {
+        "h": 6,
+        "w": 24,
+        "x": 0,
+        "y": 27
+      },
+      "id": 7,
+      "legend": {
+        "avg": false,
+        "current": true,
+        "max": false,
+        "min": false,
+        "rightSide": true,
+        "show": true,
+        "total": false,
+        "values": true
+      },
+      "lines": true,
+      "linewidth": 1,
+      "links": [],
+      "nullPointMode": "null",
+      "percentage": false,
+      "pointradius": 5,
+      "points": false,
+      "renderer": "flot",
+      "seriesOverrides": [],
+      "spaceLength": 10,
+      "stack": true,
+      "steppedLine": false,
+      "targets": [
+        {
+          "alias": "",
+          "format": "time_series",
+          "hide": false,
+          "rawSql": "SELECT\n  UNIX_TIMESTAMP(ReceivedAt) as time_sec,\n  Count(ReceivedAt) as value,\n  CAST(Priority as CHAR(1)) as metric\nFROM SystemEvents\nWHERE $__timeFilter(ReceivedAt) and\nSyslogTag like \"%ECMWF%\"\ngroup by time_sec,metric\nORDER BY ReceivedAt ASC\n\n",
+          "refId": "A"
+        }
+      ],
+      "thresholds": [],
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "Errori ECMWF",
+      "tooltip": {
+        "shared": true,
+        "sort": 0,
+        "value_type": "individual"
+      },
+      "transparent": true,
+      "type": "graph",
+      "xaxis": {
+        "buckets": null,
+        "mode": "time",
+        "name": null,
+        "show": true,
+        "values": []
+      },
+      "yaxes": [
+        {
+          "format": "short",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        },
+        {
+          "format": "short",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        }
+      ],
+      "yaxis": {
+        "align": false,
+        "alignLevel": null
+      }
+    },
+    {
+      "aliasColors": {},
+      "bars": false,
+      "dashLength": 10,
+      "dashes": false,
+      "datasource": "syslog",
+      "decimals": 0,
+      "description": "1=CRIT; 2=ALARM; 3=ERR;4=WARN",
+      "fill": 3,
+      "gridPos": {
+        "h": 6,
+        "w": 24,
+        "x": 0,
+        "y": 33
+      },
+      "id": 10,
+      "legend": {
+        "avg": false,
+        "current": true,
+        "max": false,
+        "min": false,
+        "rightSide": true,
+        "show": true,
+        "total": true,
+        "values": true
+      },
+      "lines": true,
+      "linewidth": 1,
+      "links": [],
+      "nullPointMode": "null",
+      "percentage": false,
+      "pointradius": 5,
+      "points": false,
+      "renderer": "flot",
+      "seriesOverrides": [],
+      "spaceLength": 10,
+      "stack": true,
+      "steppedLine": false,
+      "targets": [
+        {
+          "alias": "",
+          "format": "time_series",
+          "hide": false,
+          "rawSql": "SELECT\n  UNIX_TIMESTAMP(ReceivedAt) as time_sec,\n  Count(ReceivedAt) as value,\n  CAST(Priority as CHAR(1)) as metric\nFROM SystemEvents\nWHERE $__timeFilter(ReceivedAt) and\nSyslogTag like \"%DATI%\"\ngroup by time_sec,metric\nORDER BY ReceivedAt ASC\n\n",
+          "refId": "A"
+        }
+      ],
+      "thresholds": [],
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "Errori DATI",
+      "tooltip": {
+        "shared": false,
+        "sort": 1,
+        "value_type": "individual"
+      },
+      "transparent": true,
+      "type": "graph",
+      "xaxis": {
+        "buckets": null,
+        "mode": "time",
+        "name": null,
+        "show": true,
+        "values": []
+      },
+      "yaxes": [
+        {
+          "format": "short",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        },
+        {
+          "format": "short",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        }
+      ],
+      "yaxis": {
+        "align": false,
+        "alignLevel": null
+      }
+    },
+    {
+      "aliasColors": {},
+      "bars": false,
+      "dashLength": 10,
+      "dashes": false,
+      "datasource": "syslog",
+      "fill": 2,
+      "gridPos": {
+        "h": 7,
+        "w": 24,
+        "x": 0,
+        "y": 39
+      },
+      "id": 2,
+      "legend": {
+        "alignAsTable": false,
+        "avg": false,
+        "current": false,
+        "max": false,
+        "min": false,
+        "rightSide": true,
+        "show": true,
+        "total": false,
+        "values": false
+      },
+      "lines": true,
+      "linewidth": 2,
+      "links": [],
+      "nullPointMode": "null",
+      "percentage": false,
+      "pointradius": 4,
+      "points": false,
+      "renderer": "flot",
+      "seriesOverrides": [],
+      "spaceLength": 10,
+      "stack": true,
+      "steppedLine": false,
+      "targets": [
+        {
+          "alias": "",
+          "format": "time_series",
+          "hide": false,
+          "rawSql": "SELECT\n  UNIX_TIMESTAMP(ReceivedAt) as time_sec,\n  Count(ReceivedAt) as value,\n Substring(SyslogTag,1,20) as metric\nFROM SystemEvents\nWHERE $__timeFilter(ReceivedAt) and\nSyslogTag like \"%IRIS%\"\n\nGroup by time_sec,Substring(SyslogTag,1,20)\nORDER BY ReceivedAt ASC",
+          "refId": "A"
+        }
+      ],
+      "thresholds": [],
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "Messaggi IRIS",
+      "tooltip": {
+        "shared": true,
+        "sort": 0,
+        "value_type": "cumulative"
+      },
+      "type": "graph",
+      "xaxis": {
+        "buckets": null,
+        "mode": "time",
+        "name": null,
+        "show": true,
+        "values": []
+      },
+      "yaxes": [
+        {
+          "format": "short",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        },
+        {
+          "format": "short",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        }
+      ],
+      "yaxis": {
+        "align": false,
+        "alignLevel": null
+      }
+    }
+  ],
+  "refresh": false,
+  "schemaVersion": 16,
+  "style": "dark",
+  "tags": [],
+  "templating": {
+    "list": [
+      {
+        "allValue": null,
+        "current": {
+          "text": "All",
+          "value": "$__all"
+        },
+        "datasource": "syslog",
+        "hide": 0,
+        "includeAll": true,
+        "label": null,
+        "multi": true,
+        "name": "HostName",
+        "options": [],
+        "query": "Select FromHost from SystemEvents where FromHost like '%arpav%' or FromHost like '%testv%'group by FromHost",
+        "refresh": 1,
+        "regex": "",
+        "sort": 0,
+        "tagValuesQuery": "",
+        "tags": [],
+        "tagsQuery": "",
+        "type": "query",
+        "useTags": false
+      }
+    ]
+  },
+  "time": {
+    "from": "now/d",
+    "to": "now/d"
+  },
+  "timepicker": {
+    "refresh_intervals": [
+      "5s",
+      "10s",
+      "30s",
+      "1m",
+      "5m",
+      "15m",
+      "30m",
+      "1h",
+      "2h",
+      "1d"
+    ],
+    "time_options": [
+      "5m",
+      "15m",
+      "1h",
+      "6h",
+      "12h",
+      "24h",
+      "2d",
+      "7d",
+      "30d"
+    ]
+  },
+  "timezone": "",
+  "title": "Ambiente Operativo Meteo",
+  "uid": "qqRKraHmk"
+}

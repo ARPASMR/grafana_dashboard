@@ -1,0 +1,243 @@
+{
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": "-- Grafana --",
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "type": "dashboard"
+      }
+    ]
+  },
+  "editable": true,
+  "gnetId": null,
+  "graphTooltip": 0,
+  "iteration": 1557730060429,
+  "links": [],
+  "panels": [
+    {
+      "bgColor": null,
+      "colorScheme": "Unique",
+      "datasource": "syslog",
+      "decimal": 2,
+      "displayLabel": true,
+      "format": "short",
+      "gradientColors": [
+        "red",
+        "green"
+      ],
+      "gradientThresholds": "50,80",
+      "gridPos": {
+        "h": 7,
+        "w": 8,
+        "x": 0,
+        "y": 0
+      },
+      "groupDepthColors": [
+        "hsl(152,80%,80%)",
+        "hsl(228,30%,40%)"
+      ],
+      "groupSeperator": "$Host",
+      "height": 400,
+      "id": 12,
+      "links": [],
+      "mode": "time",
+      "nullPointMode": "connected",
+      "svgBubbleId": "svg_12",
+      "svgContainer": {},
+      "targets": [
+        {
+          "alias": "",
+          "format": "time_series",
+          "hide": false,
+          "rawSql": "SELECT\n  UNIX_TIMESTAMP(ReceivedAt) as time_sec,\n  substring_index(SysLogTag,'.',1) as Metric,\n  count(Priority) as value\nFROM SystemEvents\nWHERE $__timeFilter(ReceivedAt)\n  and FromHost in ($Host)\n  and Priority<4\ngroup by Metric\nORDER BY ReceivedAt desc\n",
+          "refId": "A"
+        }
+      ],
+      "thresholdColors": [
+        "green",
+        "yellow",
+        "red"
+      ],
+      "thresholds": "50,80",
+      "title": "Panel Title",
+      "type": "digrich-bubblechart-panel",
+      "valueName": "current"
+    },
+    {
+      "cards": {
+        "cardPadding": null,
+        "cardRound": null
+      },
+      "color": {
+        "cardColor": "#b4ff00",
+        "colorScale": "sqrt",
+        "colorScheme": "interpolateOranges",
+        "exponent": 0.5,
+        "mode": "spectrum"
+      },
+      "dataFormat": "tsbuckets",
+      "datasource": "syslog",
+      "gridPos": {
+        "h": 7,
+        "w": 16,
+        "x": 8,
+        "y": 0
+      },
+      "heatmap": {},
+      "highlightCards": true,
+      "id": 10,
+      "legend": {
+        "show": false
+      },
+      "links": [],
+      "minSpan": 5,
+      "repeatDirection": "h",
+      "targets": [
+        {
+          "alias": "",
+          "format": "time_series",
+          "hide": false,
+          "rawSql": "SELECT\n  UNIX_TIMESTAMP(ReceivedAt) as time_sec,\n  Priority as value,\n  FromHost as metric\nFROM SystemEvents\nWHERE $__timeFilter(ReceivedAt) and FromHost in ($Host)\nORDER BY ReceivedAt ASC\n",
+          "refId": "A"
+        }
+      ],
+      "title": "Errori server",
+      "tooltip": {
+        "show": true,
+        "showHistogram": false
+      },
+      "transparent": true,
+      "type": "heatmap",
+      "xAxis": {
+        "show": true
+      },
+      "xBucketNumber": null,
+      "xBucketSize": null,
+      "yAxis": {
+        "decimals": null,
+        "format": "short",
+        "logBase": 1,
+        "max": null,
+        "min": null,
+        "show": true,
+        "splitFactor": null
+      },
+      "yBucketBound": "upper",
+      "yBucketNumber": null,
+      "yBucketSize": null
+    },
+    {
+      "aliasColors": {},
+      "breakPoint": "50%",
+      "cacheTimeout": null,
+      "combine": {
+        "label": "Others",
+        "threshold": 0
+      },
+      "datasource": "syslog",
+      "fontSize": "80%",
+      "format": "short",
+      "gridPos": {
+        "h": 7,
+        "w": 6,
+        "x": 0,
+        "y": 7
+      },
+      "id": 6,
+      "interval": null,
+      "legend": {
+        "show": true,
+        "values": true
+      },
+      "legendType": "On graph",
+      "links": [],
+      "maxDataPoints": 3,
+      "nullPointMode": "connected",
+      "pieType": "donut",
+      "strokeWidth": 1,
+      "targets": [
+        {
+          "alias": "",
+          "format": "time_series",
+          "hide": false,
+          "rawSql": "SELECT\n  UNIX_TIMESTAMP(ReceivedAt) as time_sec,\n  substring_index(SysLogTag,'.',1) as Metric,\n  count(Priority) as value\nFROM SystemEvents\nWHERE $__timeFilter(ReceivedAt)\n  and FromHost in ($Host)\ngroup by Metric\nORDER BY ReceivedAt desc\n\n",
+          "refId": "A"
+        }
+      ],
+      "timeFrom": null,
+      "title": "Errori per processo",
+      "type": "grafana-piechart-panel",
+      "valueName": "current"
+    }
+  ],
+  "refresh": false,
+  "schemaVersion": 16,
+  "style": "dark",
+  "tags": [],
+  "templating": {
+    "list": [
+      {
+        "allValue": null,
+        "current": {
+          "tags": [],
+          "text": "arpav-sinergico02",
+          "value": [
+            "arpav-sinergico02"
+          ]
+        },
+        "datasource": "syslog",
+        "hide": 0,
+        "includeAll": false,
+        "label": null,
+        "multi": true,
+        "name": "Host",
+        "options": [],
+        "query": "select FromHost From SystemEvents where FromHost like \"%arpav%\" or  FromHost like \"%testv%\" group by FromHost",
+        "refresh": 1,
+        "regex": "",
+        "sort": 0,
+        "tagValuesQuery": "",
+        "tags": [],
+        "tagsQuery": "",
+        "type": "query",
+        "useTags": false
+      }
+    ]
+  },
+  "time": {
+    "from": "now-1h",
+    "to": "now"
+  },
+  "timepicker": {
+    "refresh_intervals": [
+      "5s",
+      "10s",
+      "30s",
+      "1m",
+      "5m",
+      "15m",
+      "30m",
+      "1h",
+      "2h",
+      "1d"
+    ],
+    "time_options": [
+      "5m",
+      "15m",
+      "1h",
+      "6h",
+      "12h",
+      "24h",
+      "2d",
+      "7d",
+      "30d"
+    ]
+  },
+  "timezone": "",
+  "title": "New dashboard Copy",
+  "uid": "e-GbWOTiz"
+}
